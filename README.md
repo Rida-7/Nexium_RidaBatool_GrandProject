@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍽️ AI Recipe Generator Web App
 
-## Getting Started
+An intelligent, minimal, and elegant web application that generates personalized recipes using AI. Built with **Next.js**, styled with **Tailwind CSS**, powered by **Supabase** (Auth + Database), and automated using **n8n workflows**. Deployed seamlessly on **Vercel**.
 
-First, run the development server:
+---
 
-```bash
+## 🔗 Live Demo
+
+🌐 [View Live App](https://your-vercel-app.vercel.app)
+
+---
+
+## ✨ Features
+
+- ✅ Magic Link Authentication (Supabase)
+- 🍳 Generate personalized recipes via AI (n8n workflow)
+- 💾 Save and view your generated recipes
+- 🌗 Dark / Light theme toggle
+- 📱 Fully responsive design
+- 🔐 Secure user access with Supabase Auth
+- ☁️ Deployed on Vercel with CI/CD
+
+---
+
+## 🧠 Tech Stack
+
+| Tech         | Usage                      |
+|--------------|----------------------------|
+| Next.js      | Frontend framework         |
+| Supabase     | Auth + Database            |
+| n8n          | AI Recipe generation logic |
+| Tailwind CSS | Styling and theming        |
+| Vercel       | Hosting and deployment     |
+
+---
+
+## 📁 Project Structure
+
+├── app/                   # Next.js app structure
+│   ├── login/             # Auth page
+│   ├── dashboard/         # Recipe generator page
+│   ├── saved/             # Saved recipes list
+├── components/            # Reusable UI components
+├── lib/                   # Supabase client, helpers
+├── public/                # Static assets
+├── styles/                # Global styles
+├── .env.local             # Environment variables
+└── README.md
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repository
+
+git clone https://github.com/your-username/ai-recipe-generator.git
+cd ai-recipe-generator
+
+### 2. Install dependencies
+
+npm install
+
+### 3. Configure `.env.local`
+
+Create a file `.env.local` and add the following:
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_N8N_WEBHOOK_URL=https://your-n8n-url.com/webhook/ai-recipe
+
+### 4. Run the app locally
+
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Deployment (Vercel)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push your code to a GitHub repository.
+2. Go to [Vercel](https://vercel.com) and import your repo.
+3. Add the environment variables (same as `.env.local`) in **Project Settings → Environment Variables**.
+4. Click **Deploy** and your app is live!
 
-## Learn More
+## 🧠 AI Logic via n8n
 
-To learn more about Next.js, take a look at the following resources:
+* Your `n8n` instance must be deployed on a public URL (e.g. `n8n.cloud`, or self-hosted on Render, Railway, or Fly.io).
+* The workflow receives the ingredient list and responds with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  * A recipe title
+  * Step-by-step cooking instructions
+* Make sure the webhook node is configured to **allow unauthenticated access** or uses an API key/token.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
