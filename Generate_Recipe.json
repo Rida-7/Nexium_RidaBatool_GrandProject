@@ -1,0 +1,153 @@
+{
+  "name": "Generate Recipe",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/generate-recipe",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        180
+      ],
+      "id": "34dbce06-dabb-46c1-b452-35265e1508fb",
+      "name": "Webhook1",
+      "webhookId": "d2b1dcea-a74f-465b-ad0c-9aae0a9f3c39"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const email = $input.item.json.email || \"\";\nconst ingredients = $input.item.json.ingredients || \"\";\n\nconst prompt = `Suggest a recipe using these ingredients: ${$json[\"body\"][\"ingredients\"]}. Return a title and the recipe steps.`;\n\nreturn {\n  json: {\n    email,\n    ingredients,\n    prompt\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        180
+      ],
+      "id": "914a013a-c727-4d13-85e8-1444915dd69c",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={   \"model\": \"openai/gpt-3.5-turbo\",   \"messages\": [     {       \"role\": \"user\",       \"content\": \"={{ $json.prompt }}\"     }   ] }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        180
+      ],
+      "id": "e055c11b-5dd7-49d3-bbc4-aaba145309e5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const fullResponse = $json.choices?.[0]?.message?.content || \"No response\";\nconst lines = fullResponse.split('\\n');\n\n// Extract title from first line (e.g., \"Title: Spicy Chickpea Curry\")\nlet recipeTitle = \"AI Generated Recipe\";\nif (lines[0].toLowerCase().startsWith(\"title:\")) {\n  recipeTitle = lines[0].replace(/title:/i, '').trim();\n}\n\n// Join the rest as the actual recipe\nconst recipe = lines.slice(1).join('\\n').trim();\n\nreturn {\n  json: {\n    recipe,\n    email: $json.email,\n    ingredients: $json.ingredients,\n    recipe_title: recipeTitle\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        180
+      ],
+      "id": "70d33e07-3526-46fb-9aa2-78ffff9c2ae4",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        660,
+        180
+      ],
+      "id": "1b876fea-20d4-424e-9928-7a18b615bada",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e08b5dbd-2d73-4268-85fd-22e05e69bfef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cd66466b766b7f9185c69593a3033d5ba798d5834e5174324d7a1ae3f3726772"
+  },
+  "id": "TeSlkS8MvGz6qnPN",
+  "tags": []
+}
