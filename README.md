@@ -6,7 +6,7 @@ An intelligent, minimal, and elegant web application that generates personalized
 
 ## 🔗 Live Demo
 
-🌐 [View Live App](https://your-vercel-app.vercel.app)
+🌐 [View Live App](https://nexium-rida-batool-grand-project.vercel.app/)
 
 ---
 
